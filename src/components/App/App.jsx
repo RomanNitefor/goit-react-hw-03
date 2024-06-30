@@ -2,13 +2,30 @@ import { useState, useEffect } from "react";
 import ContactForm from "../ContactForm/ContactForm";
 import SearchBox from "../SearchBox/SearchBox";
 import ContactList from "../ContactList/ContactList";
-import initialContacts from "../contacts.json";
+import initialContacts from "../../../contact.json";
 
 export default function App() {
-  const [contacts, setContacts] = useState(initialContacts);
   const [filter, setFilter] = useState("");
+
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = window.localStorage.getItem("saved contacts");
+    if (savedContacts !== null) {
+      try {
+        const parsedContacts = JSON.parse(savedContacts);
+        if (Array.isArray(parsedContacts)) {
+          return parsedContacts;
+        } else {
+          return initialContacts;
+        }
+      } catch (error) {
+        console.error("Failed to parse saved contacts:", error);
+        return initialContacts;
+      }
+    }
+    return initialContacts;
+  });
   useEffect(() => {
-    console.log(contacts);
+    window.localStorage.setItem("saved contacts", JSON.stringify(contacts));
   }, [contacts]);
 
   const addContact = (newContact) => {
