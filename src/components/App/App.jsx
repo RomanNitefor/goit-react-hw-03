@@ -29,8 +29,10 @@ export default function App() {
   }, [contacts]);
 
   const addContact = (newContact) => {
+    const uniqueId = `${Date.now()}-${contacts.length}`;
+    const contactWithId = { ...newContact, id: uniqueId };
     setContacts((prevContacts) => {
-      return [...prevContacts, newContact];
+      return [...prevContacts, contactWithId];
     });
   };
 
